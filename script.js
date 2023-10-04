@@ -1,23 +1,34 @@
-let displayValue = '';
+document.addEventListener('DOMContentLoaded', function () {
+    const taskInput = document.getElementById('taskInput');
+    const addTaskButton = document.getElementById('addTask');
+    const taskList = document.getElementById('taskList');
+    const completedList = document.getElementById('completedList');
 
-function appendToDisplay(value) {
-    displayValue += value;
-    document.getElementById('result').value = displayValue;
-}
+    addTaskButton.addEventListener('click', function () {
+        const taskText = taskInput.value.trim();
+        if (taskText === '') {
+            return;
+        }
 
-function clearDisplay() {
-    displayValue = '';
-    document.getElementById('result').value = '';
-}
+        const taskItem = document.createElement('li');
+        taskItem.innerHTML = `
+            <span>${taskText}</span>
+            <button class="complete-button">Complete</button>
+        `;
 
-function calculateResult() {
-    try {
-        const result = eval(displayValue);
-        document.getElementById('result').value = result;
-        displayValue = result.toString();
-    } catch (error) {
-        document.getElementById('result').value = 'Error';
-        displayValue = '';
+        taskList.appendChild(taskItem);
+        taskInput.value = '';
+
+        const completeButton = taskItem.querySelector('.complete-button');
+        completeButton.addEventListener('click', function () {
+            taskItem.remove();
+            moveTaskToCompletedList(taskText);
+        });
+    });
+
+    function moveTaskToCompletedList(taskText) {
+        const completedItem = document.createElement('li');
+        completedItem.innerText = taskText;
+        completedList.appendChild(completedItem);
     }
-}
-
+});
